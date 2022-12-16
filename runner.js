@@ -12,4 +12,6 @@ const sudokuStr = fs.readFile(
   readAndSolve,
 );
 
+console.log(sudokuStr)
+
 module.exports = {sudokuStr}
