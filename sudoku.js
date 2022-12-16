@@ -6,8 +6,8 @@
 function solve(boardString) {
   // let regexp = /(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})/gi
   // return boardString.replace(regexp, '$1,$2,$3,$4,$5,$6,$7,$8,$9').split(',')
-  const re = /.{9}/g
-  return boardString.match(re).map((el)=>el.split(''))
+  const regX = /.{9}/g
+  return arrBoard =  boardString.match(regX).map((el)=>el.split(''))
 }
 
 console.log(solve('6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--'))
