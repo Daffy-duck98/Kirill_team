@@ -72,6 +72,14 @@ function solve(boardString) {
       }
     }
   }
+
+  if (boardArr.join('').includes('NaN') && count < 30) {
+    return solve(
+      boardArr.join(',').split(',').join('').replace(/NaN/g, '-'),
+      (count += 1)
+    );
+  }
+  return boardArr;
 }
 
 /**
