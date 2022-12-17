@@ -99,6 +99,14 @@ function isSolved(board) {
       return false;
     }
   }
+  if (
+    arrToString(arrBoard)
+      .split("")
+      .reduce((a, b) => a + Number(b), 0) !== 405
+  ) {
+    return false;
+  }
+  return true;
 }
 
 function arrToString(stepdBoardArr) {
