@@ -87,10 +87,9 @@ function solve(boardString) {
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
 function isSolved(board) {
-  if (!board.flat().includes('-')) {
-    return true;
-  }
-  return false;
+  board.every((line) => {
+    if (line.reduce((a, b) => a + Number(b), 0) !== 45) return false;
+  });
 }
 
 /**
