@@ -47,6 +47,22 @@ function isSolved(board) {
       return false;
     }
   }
+  function arrToString(board) {
+    return board
+      .map((line) => {
+        return line.join('');
+      })
+      .join('');
+  }
+
+  if (
+    arrToString(board)
+      .split('')
+      .reduce((a, b) => a + Number(b), 0) !== 405
+  ) {
+    return false;
+  }
+  return true;
 }
 // console.log(isSolved(solve('6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--')))
 
