@@ -101,6 +101,14 @@ function isSolved(board) {
   }
 }
 
+function arrToString(stepdBoardArr) {
+  return stepdBoardArr
+    .map((line) => {
+      return line.join("");
+    })
+    .join("");
+}
+
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает строку с игровым полем для последующего вывода в консоль.
