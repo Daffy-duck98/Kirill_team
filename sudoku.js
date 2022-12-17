@@ -9,14 +9,17 @@ function solve(boardString) {
   const regX = /.{9}/g;
   const board = boardString.match(regX).map((el) => el.split(''));
 
-  for (let i = 0; i < board.length; i += 1) {
-    for (let j = 0; j < board.length; j += 1) {
-      if (board[i][j] === '-') {
-        board[i][j] = (Math.floor(Math.random() * (10 - 1)) + 1).toString();
+  const findEmpty = (board) => {
+    for (let i = 0; i < board.length; i += 1) {
+      for (let j = 0; j < board.length; j += 1) {
+        if (board[i][j] === '-') {
+        // board[i][j] = (Math.floor(Math.random() * (10 - 1)) + 1).toString();
+          return [i, j];
+        }
       }
     }
-  }
-  return board;
+    return null;
+  };
 }
 console.log(solve('6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--'));
 
@@ -25,12 +28,13 @@ console.log(solve('6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
 function isSolved(board) {
-  board.map((arr) => arr.map((el) => {
-    if (el === '-') {
-      return false;
-    }
-    return true;
-  }));
+  const currPos = findEmpty(board);
+  // board.map((arr) => arr.map((el) => {
+  //   if (el === '-') {
+  //     return false;
+  //   }
+  //   return true;
+  // }));
 }
 // console.log(isSolved(solve('6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--')))
 
