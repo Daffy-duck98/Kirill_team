@@ -5,7 +5,7 @@
  */
 const size = 9;
 
-function solve(boardString) {
+function solve(string) {
   const arrBoard = stringToArr(string);
   step = () => {
     const currPos = findEmptySpace(arrBoard);
@@ -51,7 +51,7 @@ function findEmptySpace(arrBoard) {
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
-function isSolved(board) {
+function isSolved(arrBoard) {
   arrBoard.every((line) => {
     if (line.reduce((a, b) => a + Number(b), 0) !== 45) return false;
   });
