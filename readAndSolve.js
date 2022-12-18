@@ -1,5 +1,5 @@
 // Подключить функции из файла sudoku.js.
-const sudoku = require('./sudoku');
+const { solve, isSolved, prettyBoard } = require('./sudoku');
 
 function readAndSolve(error, fileData) {
   // Если чтение файла не удалось, выбросить ошибку с описанием проблемы и
@@ -27,7 +27,7 @@ function readAndSolve(error, fileData) {
   console.log(puzzle, '\n');
 
   // Использовать функцию solve из файла sudoku.js для решения судоку.
-  const solvedPuzzle = sudoku.solve(puzzle);
+  const solvedPuzzle = solve(puzzle);
 
   // Использовать функцию isSolved из файла sudoku.js для проверки решения судоку.
   if (!sudoku.isSolved(solvedPuzzle)) {
