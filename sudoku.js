@@ -48,7 +48,12 @@ function prettyBoard(board) {
 function validate(currPos, arrBoard, num, boxSize) {
   const [y, x] = currPos;
   //Проверка что число встречается в строке
-  
+  for (let i = 0; i < size; i++) {
+    if (Number(arrBoard[i][x]) === num && i !== y) {
+      return false;
+    }
+  }
+
   
   //Проверка что число встречается в колонке 
   for (i=0; i<board.length, i+=1){
