@@ -36,6 +36,17 @@ function stringToArr(boardString) {
   });
 }
 
+function findEmptySpace(arrBoard) {
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      if (arrBoard[y][x] === '-') {
+        return [y, x];
+      }
+    }
+  }
+  return null;
+}
+
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает булевое значение — решено это игровое поле или нет.
