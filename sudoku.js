@@ -3,83 +3,30 @@
  * Возвращает игровое поле после попытки его решить.
  * Договорись со своей командой, в каком формате возвращать этот результат.
  */
+const size = 9;
 
 function solve(boardString) {
-  const boardArr = [];
-  const arr = [];
-  const obj = {};
-  for (let i = 0; i < 81; i += 1) {
-    arr.push(+boardString[i]);
-  }
-
-  for (let i = 0; i < 9; i += 1) {
-    boardArr.push(arr.slice(0, 9));
-    arr.splice(0, 9);
-  }
-  for (let i = 0; i < 9; i += 1) {
-    for (let j = 0; j < 9; j += 1) {
-      if (isNaN(boardArr[i][j])) {
-        let newArr = [];
-        for (let k = 1; k < 10; k++) {
-          if (
-            !boardArr[i].includes(k) &&
-            boardArr[0][j] !== k &&
-            boardArr[1][j] !== k &&
-            boardArr[2][j] !== k &&
-            boardArr[3][j] !== k &&
-            boardArr[4][j] !== k &&
-            boardArr[5][j] !== k &&
-            boardArr[6][j] !== k &&
-            boardArr[7][j] !== k &&
-            boardArr[8][j] !== k
-          ) {
-            newArr.push(k);
-            obj[`${i}${j}`] = newArr;
-          }
+  const arrBoard = stringToArr(string);
+  step = () => {
+    const currPos = findEmptySpace(arrBoard);
+    if (currPos === null) {
+      return true;
+    }
+    for (let num = 1; num <= size; num += 1) {
+      const isValid = validate(currPos, arrBoard, num);
+      if (isValid) {
+        const [y, x] = currPos;
+        arrBoard[y][x] = String(num);
+        if (step()) {
+          return true;
         }
+        arrBoard[y][x] = '-';
       }
     }
-  }
-
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      if (obj.hasOwnProperty(`${i}${j}`)) {
-        if (obj[`${i}${j}`].length === 1) {
-          boardArr[i][j] = +obj[`${i}${j}`].join('');
-        }
-      }
-    }
-  }
-
-  let tempArr = [];
-  let unique = 0;
-  let a = 0;
-  let b = 0;
-  for (let i = 0; i < 3; i++) {
-    for (let j = 3; j < 6; j++) {
-      tempArr.push(boardArr[i][j]);
-      if (isNaN(boardArr[i][j])) {
-        a = i;
-        b = j;
-      }
-    }
-    if (isNaN(boardArr[a][b])) {
-      if (tempArr.length === 9) {
-        tempArr.sort();
-        tempArr = tempArr.slice(0, 8);
-        unique = 45 - tempArr.reduce((a, b) => a + b, 0);
-        boardArr[a][b] = unique;
-      }
-    }
-  }
-
-  if (boardArr.join('').includes('NaN') && count < 30) {
-    return solve(
-      boardArr.join(',').split(',').join('').replace(/NaN/g, '-'),
-      (count += 1)
-    );
-  }
-  return boardArr;
+    return false;
+  };
+  step();
+  return arrBoard;
 }
 
 /**
