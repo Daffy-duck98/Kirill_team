@@ -52,10 +52,26 @@ function findEmptySpace(arrBoard) {
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
 function isSolved(board) {
-  if (!board.flat().includes('-')) {
-    return true;
+  arrBoard.every((line) => {
+    if (line.reduce((a, b) => a + Number(b), 0) !== 45) return false;
+  });
+  for (let i = 0; i < size; i += 1) {
+    const result = [];
+    for (let j = 0; j < size; j += 1) {
+      result.push(arrBoard[j][i]);
+    }
+    if (result.reduce((a, b) => a + Number(b), 0) !== 45) {
+      return false;
+    }
   }
-  return false;
+  if (
+    arrToString(arrBoard)
+      .split('')
+      .reduce((a, b) => a + Number(b), 0) !== 405
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
