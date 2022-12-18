@@ -3,118 +3,90 @@
  * Возвращает игровое поле после попытки его решить.
  * Договорись со своей командой, в каком формате возвращать этот результат.
  */
-
-function solve(boardString) {
-  const boardArr = [];
-  const arr = [];
-  const obj = {};
-  for (let i = 0; i < 81; i += 1) {
-    arr.push(+boardString[i]);
-  }
-
-  for (let i = 0; i < 9; i += 1) {
-    boardArr.push(arr.slice(0, 9));
-    arr.splice(0, 9);
-  }
-  for (let i = 0; i < 9; i += 1) {
-    for (let j = 0; j < 9; j += 1) {
-      if (isNaN(boardArr[i][j])) {
-        let newArr = [];
-        for (let k = 1; k < 10; k++) {
-          if (
-            !boardArr[i].includes(k) &&
-            boardArr[0][j] !== k &&
-            boardArr[1][j] !== k &&
-            boardArr[2][j] !== k &&
-            boardArr[3][j] !== k &&
-            boardArr[4][j] !== k &&
-            boardArr[5][j] !== k &&
-            boardArr[6][j] !== k &&
-            boardArr[7][j] !== k &&
-            boardArr[8][j] !== k
-          ) {
-            newArr.push(k);
-            obj[`${i}${j}`] = newArr;
-          }
+const size = 9;
+const boxSize = 3;
+function solve(string) {
+  const arrBoard = stringToArr(string);
+  step = () => {
+    const currPos = findEmptySpace(arrBoard);
+    if (currPos === null) {
+      return true;
+    }
+    for (let num = 1; num <= size; num += 1) {
+      const isValid = validate(currPos, arrBoard, num);
+      if (isValid) {
+        const [y, x] = currPos;
+        arrBoard[y][x] = String(num);
+        if (step()) {
+          return true;
         }
+        arrBoard[y][x] = '-';
       }
     }
-  }
-
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      if (obj.hasOwnProperty(`${i}${j}`)) {
-        if (obj[`${i}${j}`].length === 1) {
-          boardArr[i][j] = +obj[`${i}${j}`].join('');
-        }
-      }
-    }
-  }
-
-  let tempArr = [];
-  let unique = 0;
-  let a = 0;
-  let b = 0;
-  for (let i = 0; i < 3; i++) {
-    for (let j = 3; j < 6; j++) {
-      tempArr.push(boardArr[i][j]);
-      if (isNaN(boardArr[i][j])) {
-        a = i;
-        b = j;
-      }
-    }
-    if (isNaN(boardArr[a][b])) {
-      if (tempArr.length === 9) {
-        tempArr.sort();
-        tempArr = tempArr.slice(0, 8);
-        unique = 45 - tempArr.reduce((a, b) => a + b, 0);
-        boardArr[a][b] = unique;
-      }
-    }
-  }
-
-  if (boardArr.join('').includes('NaN') && count < 30) {
-    return solve(
-      boardArr.join(',').split(',').join('').replace(/NaN/g, '-'),
-      (count += 1)
-    );
-  }
-  return boardArr;
+    return false;
+  };
+  step();
+  return arrBoard;
 }
-
+function stringToArr(boardString) {
+  const re = /.{9}/g;
+  return boardString.match(re).map((line) => {
+    return line.split('');
+  });
+}
+function findEmptySpace(arrBoard) {
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      if (arrBoard[y][x] === '-') {
+        return [y, x];
+      }
+    }
+  }
+  return null;
+}
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
-function isSolved(board) {
-  board.every((line) => {
+
+
+function isSolved(arrBoard) {
+  arrBoard.every((line) => {
+
+
     if (line.reduce((a, b) => a + Number(b), 0) !== 45) return false;
   });
   for (let i = 0; i < size; i += 1) {
     const result = [];
     for (let j = 0; j < size; j += 1) {
-      result.push(board[j][i]);
+
+      result.push(arrBoard[j][i]);
+
     }
     if (result.reduce((a, b) => a + Number(b), 0) !== 45) {
       return false;
     }
+
   }
   if (
     arrToString(arrBoard)
-      .split("")
+      .split('')
       .reduce((a, b) => a + Number(b), 0) !== 405
   ) {
     return false;
   }
+
   return true;
 }
 
 function arrToString(stepdBoardArr) {
   return stepdBoardArr
     .map((line) => {
-      return line.join("");
+
+      return line.join('');
     })
-    .join("");
+    .join('');
+
 }
 
 /**
@@ -122,7 +94,59 @@ function arrToString(stepdBoardArr) {
  * Возвращает строку с игровым полем для последующего вывода в консоль.
  * Подумай, как симпатичнее сформировать эту строку.
  */
-function prettyBoard(board) {}
+function prettyBoard(board) {
+  const stringBoard = arrToString(board);
+  let result = stringBoard.match(/.{9}/g).map((el) => {
+    el = el.split('');
+    el.unshift('★ ');
+    el.push(' ★');
+    el.splice(4, 0, ' ★ ');
+    el.splice(8, 0, ' ★ ');
+    return el;
+  });
+
+  const border =
+    '-------------------------\n    (╮°-°)╮┳━━┳ ( ╯°□°)╯ ┻━━┻\n         спасибо б**\n★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★';
+  const border11 =
+    '★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★\n        ┬─┬ノ( º _ ºノ)\n         Простите б**';
+  const border2 =
+    '★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★\n        ┬┴┬┴┤(o_O)├┬┴┬┴\n★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★';
+
+  result = result.map((el) => el.join(' '));
+  result.unshift(border);
+  result.push(border11);
+  result.splice(4, 0, border2);
+  result.splice(8, 0, border2);
+
+  return result.join('\n');
+}
+function validate(currPos, arrBoard, num, boxSize) {
+  const [y, x] = currPos;
+
+  for (let i = 0; i < size; i++) {
+    if (Number(arrBoard[y][i]) === num && i !== x) {
+      return false;
+    }
+  }
+
+  for (let i = 0; i < size; i++) {
+    if (Number(arrBoard[i][x]) === num && i !== y) {
+      return false;
+    }
+  }
+
+  const firstBlockOfBoxY = Math.floor(y / boxSize) * boxSize;
+  const firstBlockOfBoxX = Math.floor(x / boxSize) * boxSize;
+
+  for (let i = firstBlockOfBoxY; i < boxSize + firstBlockOfBoxY; i++) {
+    for (let j = firstBlockOfBoxX; j < boxSize + firstBlockOfBoxX; j++) {
+      if (Number(arrBoard[i][j]) === num && i !== y && j !== x) {
+        return false;
+      }
+    }
+  }
+  return true;
+}
 
 // Экспортировать функции для использования в другом файле (например, readAndSolve.js).
 module.exports = {
