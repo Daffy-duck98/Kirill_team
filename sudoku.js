@@ -29,6 +29,13 @@ function solve(boardString) {
   return arrBoard;
 }
 
+function stringToArr(boardString) {
+  const re = /.{9}/g;
+  return boardString.match(re).map((line) => {
+    return line.split('');
+  });
+}
+
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает булевое значение — решено это игровое поле или нет.
