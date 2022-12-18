@@ -49,18 +49,24 @@ function findEmptySpace(arrBoard) {
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
 
+
 function isSolved(arrBoard) {
   arrBoard.every((line) => {
+
+
     if (line.reduce((a, b) => a + Number(b), 0) !== 45) return false;
   });
   for (let i = 0; i < size; i += 1) {
     const result = [];
     for (let j = 0; j < size; j += 1) {
+
       result.push(arrBoard[j][i]);
+
     }
     if (result.reduce((a, b) => a + Number(b), 0) !== 45) {
       return false;
     }
+
   }
   if (
     arrToString(arrBoard)
@@ -69,15 +75,18 @@ function isSolved(arrBoard) {
   ) {
     return false;
   }
+
   return true;
 }
 
 function arrToString(stepdBoardArr) {
   return stepdBoardArr
     .map((line) => {
+
       return line.join('');
     })
     .join('');
+
 }
 
 /**
