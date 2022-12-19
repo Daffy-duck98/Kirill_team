@@ -5,7 +5,7 @@
  */
 
 const size = 9;
-const boxSize = 3;
+
 function solve(string) {
   const arrBoard = stringToArr(string);
   step = () => {
@@ -51,25 +51,18 @@ function findEmptySpace(arrBoard) {
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
 
-
-
 function isSolved(arrBoard) {
   arrBoard.every((line) => {
-
-
     if (line.reduce((a, b) => a + Number(b), 0) !== 45) return false;
   });
   for (let i = 0; i < size; i += 1) {
     const result = [];
     for (let j = 0; j < size; j += 1) {
-
       result.push(arrBoard[j][i]);
-
     }
     if (result.reduce((a, b) => a + Number(b), 0) !== 45) {
       return false;
     }
-
   }
   if (
     arrToString(arrBoard)
@@ -85,13 +78,10 @@ function isSolved(arrBoard) {
 function arrToString(stepdBoardArr) {
   return stepdBoardArr
     .map((line) => {
-
       return line.join('');
     })
     .join('');
-
 }
-
 
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
@@ -102,19 +92,19 @@ function prettyBoard(board) {
   const stringBoard = arrToString(board);
   let result = stringBoard.match(/.{9}/g).map((el) => {
     el = el.split('');
-    el.unshift('★ ');
-    el.push(' ★');
-    el.splice(4, 0, ' ★ ');
-    el.splice(8, 0, ' ★ ');
+    el.unshift('\uD83D\uDE00');
+    el.push('\uD83D\uDE00');
+    el.splice(4, 0, '\uD83D\uDE00');
+    el.splice(8, 0, '\uD83D\uDE00');
     return el;
   });
 
   const border =
-    '-------------------------\n    (╮°-°)╮┳━━┳ ( ╯°□°)╯ ┻━━┻\n         спасибо б**\n★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★';
+    '-------------------------\n           \n\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00';
   const border11 =
-    '★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★\n        ┬─┬ノ( º _ ºノ)\n         Простите б**';
+    '\n\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\n';
   const border2 =
-    '★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★\n        ┬┴┬┴┤(o_O)├┬┴┬┴\n★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★';
+    '\n\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\n       \n\n\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00\uD83D\uDE00';
 
   result = result.map((el) => el.join(' '));
   result.unshift(border);
@@ -152,7 +142,7 @@ function validate(currPos, arrBoard, num, boxSize) {
   return true;
 }
 
-//Делаем проверку на валидность 
+//Делаем проверку на валидность
 function validate(currPos, arrBoard, num, boxSize) {
   const [y, x] = currPos;
   //Проверка что число встречается в строке
@@ -163,20 +153,20 @@ function validate(currPos, arrBoard, num, boxSize) {
     }
   }
 
-  //Проверка что число встречается в колонке 
-  for (i=0; i<board.length, i+=1){
+  //Проверка что число встречается в колонке
+  for (let i = 0; i < arrBoard.length; i += 1) {
     //для проверки уникальности элемета в колонке и не проверять текущее значение
-    if (Number(arrBoard[y][i]) === num && i !== x) { 
+    if (Number(arrBoard[y][i]) === num && i !== x) {
       return false;
     }
-    }
+  }
   // Проверка что число встречается в секторе квадрата
   //Проверяем инаходим начало квадрата, где левая верхняя ячейка
   //Вычисляем в какой строке находится наш квадрат размер квадрата 3
   const firstBlockOfBoxY = Math.floor(y / 3) * 3;
   //Вычисляем в какой колонке находится наш квадрат  размер квадрата 3
   const firstBlockOfBoxX = Math.floor(x / 3) * 3;
-  //Проводим проверку по квадрату 
+  //Проводим проверку по квадрату
   for (let i = firstBlockOfBoxY; i < 3 + firstBlockOfBoxY; i++) {
     for (let j = firstBlockOfBoxX; j < 3 + firstBlockOfBoxX; j++) {
       if (Number(arrBoard[i][j]) === num && i !== y && j !== x) {
@@ -185,8 +175,7 @@ function validate(currPos, arrBoard, num, boxSize) {
     }
   }
   return true;
-
-} 
+}
 
 // Экспортировать функции для использования в другом файле (например, readAndSolve.js).
 module.exports = {
