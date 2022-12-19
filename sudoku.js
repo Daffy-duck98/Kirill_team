@@ -3,37 +3,95 @@
  * Возвращает игровое поле после попытки его решить.
  * Договорись со своей командой, в каком формате возвращать этот результат.
  */
-// function solve(boardString) {
-// //   // let regexp = /(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})\s*(.{9})/gi
-// //   // return boardString.replace(regexp, '$1,$2,$3,$4,$5,$6,$7,$8,$9').split(',')
-//   const regX = /.{9}/g;
-//   const board = boardString.match(regX).map((el) => el.split(''));
 
-//   for (let i = 0; i < board.length; i += 1) {
-//     for (let j = 0; j < board.length; j += 1) {
-//       if (board[i][j] === '-') {
-//         board[i][j] = (Math.floor(Math.random() * (10 - 1)) + 1).toString();
-//         // return [i, j];
-//       }
-//     }
-//   }
-//   return board;
-// }
-// console.log(solve('6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--'));
+const size = 9;
+const boxSize = 3;
+function solve(string) {
+  const arrBoard = stringToArr(string);
+  step = () => {
+    const currPos = findEmptySpace(arrBoard);
+    if (currPos === null) {
+      return true;
+    }
+    for (let num = 1; num <= size; num += 1) {
+      const isValid = validate(currPos, arrBoard, num);
+      if (isValid) {
+        const [y, x] = currPos;
+        arrBoard[y][x] = String(num);
+        if (step()) {
+          return true;
+        }
+        arrBoard[y][x] = '-';
+      }
+    }
+    return false;
+  };
+  step();
+  return arrBoard;
+}
+function stringToArr(boardString) {
+  const re = /.{9}/g;
+  return boardString.match(re).map((line) => {
+    return line.split('');
+  });
+}
+function findEmptySpace(arrBoard) {
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      if (arrBoard[y][x] === '-') {
+        return [y, x];
+      }
+    }
+  }
+  return null;
+}
 
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
-// function isSolved(board) {
-//   board.map((arr) => arr.map((el) => {
-//     if (el === '-') {
-//       return false;
-//     }
-//     return true;
-//   }));
-// }
-// console.log(isSolved(solve('6-873----2-----46-----6482--8---57-19--618--4-31----8-86-2---39-5----1--1--4562--')));
+
+
+
+function isSolved(arrBoard) {
+  arrBoard.every((line) => {
+
+
+    if (line.reduce((a, b) => a + Number(b), 0) !== 45) return false;
+  });
+  for (let i = 0; i < size; i += 1) {
+    const result = [];
+    for (let j = 0; j < size; j += 1) {
+
+      result.push(arrBoard[j][i]);
+
+    }
+    if (result.reduce((a, b) => a + Number(b), 0) !== 45) {
+      return false;
+    }
+
+  }
+  if (
+    arrToString(arrBoard)
+      .split('')
+      .reduce((a, b) => a + Number(b), 0) !== 405
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function arrToString(stepdBoardArr) {
+  return stepdBoardArr
+    .map((line) => {
+
+      return line.join('');
+    })
+    .join('');
+
+}
+
 
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
@@ -41,7 +99,57 @@
  * Подумай, как симпатичнее сформировать эту строку.
  */
 function prettyBoard(board) {
+  const stringBoard = arrToString(board);
+  let result = stringBoard.match(/.{9}/g).map((el) => {
+    el = el.split('');
+    el.unshift('★ ');
+    el.push(' ★');
+    el.splice(4, 0, ' ★ ');
+    el.splice(8, 0, ' ★ ');
+    return el;
+  });
 
+  const border =
+    '-------------------------\n    (╮°-°)╮┳━━┳ ( ╯°□°)╯ ┻━━┻\n         спасибо б**\n★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★';
+  const border11 =
+    '★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★\n        ┬─┬ノ( º _ ºノ)\n         Простите б**';
+  const border2 =
+    '★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★\n        ┬┴┬┴┤(o_O)├┬┴┬┴\n★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★';
+
+  result = result.map((el) => el.join(' '));
+  result.unshift(border);
+  result.push(border11);
+  result.splice(4, 0, border2);
+  result.splice(8, 0, border2);
+
+  return result.join('\n');
+}
+function validate(currPos, arrBoard, num, boxSize) {
+  const [y, x] = currPos;
+
+  for (let i = 0; i < size; i++) {
+    if (Number(arrBoard[y][i]) === num && i !== x) {
+      return false;
+    }
+  }
+
+  for (let i = 0; i < size; i++) {
+    if (Number(arrBoard[i][x]) === num && i !== y) {
+      return false;
+    }
+  }
+
+  const firstBlockOfBoxY = Math.floor(y / boxSize) * boxSize;
+  const firstBlockOfBoxX = Math.floor(x / boxSize) * boxSize;
+
+  for (let i = firstBlockOfBoxY; i < boxSize + firstBlockOfBoxY; i++) {
+    for (let j = firstBlockOfBoxX; j < boxSize + firstBlockOfBoxX; j++) {
+      if (Number(arrBoard[i][j]) === num && i !== y && j !== x) {
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 //Делаем проверку на валидность 
