@@ -3,6 +3,7 @@
  * Возвращает игровое поле после попытки его решить.
  * Договорись со своей командой, в каком формате возвращать этот результат.
  */
+
 const size = 9;
 const boxSize = 3;
 function solve(string) {
@@ -44,10 +45,12 @@ function findEmptySpace(arrBoard) {
   }
   return null;
 }
+
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
  * Возвращает булевое значение — решено это игровое поле или нет.
  */
+
 
 
 function isSolved(arrBoard) {
@@ -88,6 +91,7 @@ function arrToString(stepdBoardArr) {
     .join('');
 
 }
+
 
 /**
  * Принимает игровое поле в том формате, в котором его вернули из функции solve.
@@ -147,6 +151,42 @@ function validate(currPos, arrBoard, num, boxSize) {
   }
   return true;
 }
+
+//Делаем проверку на валидность 
+function validate(currPos, arrBoard, num, boxSize) {
+  const [y, x] = currPos;
+  //Проверка что число встречается в строке
+  for (let i = 0; i < size; i++) {
+    //для проверки уникальности элемета в строке и не проверять текущее значение
+    if (Number(arrBoard[i][x]) === num && i !== y) {
+      return false;
+    }
+  }
+
+  //Проверка что число встречается в колонке 
+  for (i=0; i<board.length, i+=1){
+    //для проверки уникальности элемета в колонке и не проверять текущее значение
+    if (Number(arrBoard[y][i]) === num && i !== x) { 
+      return false;
+    }
+    }
+  // Проверка что число встречается в секторе квадрата
+  //Проверяем инаходим начало квадрата, где левая верхняя ячейка
+  //Вычисляем в какой строке находится наш квадрат размер квадрата 3
+  const firstBlockOfBoxY = Math.floor(y / 3) * 3;
+  //Вычисляем в какой колонке находится наш квадрат  размер квадрата 3
+  const firstBlockOfBoxX = Math.floor(x / 3) * 3;
+  //Проводим проверку по квадрату 
+  for (let i = firstBlockOfBoxY; i < 3 + firstBlockOfBoxY; i++) {
+    for (let j = firstBlockOfBoxX; j < 3 + firstBlockOfBoxX; j++) {
+      if (Number(arrBoard[i][j]) === num && i !== y && j !== x) {
+        return false;
+      }
+    }
+  }
+  return true;
+
+} 
 
 // Экспортировать функции для использования в другом файле (например, readAndSolve.js).
 module.exports = {
